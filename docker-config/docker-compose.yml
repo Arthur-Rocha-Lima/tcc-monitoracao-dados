@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  rest-monitor:
+    build:
+      context: ../monitoracao-dados/
+      dockerfile: api/rest/Dockerfile
+      args:
+        - NO_CACHE=${TIMESTAMP}
+    container_name: rest-monitor
+    network_mode: "host"
+    ports:
+      - "8080:8080"
+    environment:
+      - GOMAXPROCS=1
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+    restart: unless-stopped
+
+  grpc-monitor:
+    build:
+      context: ../monitoracao-dados/
+      dockerfile: api/grpc/Dockerfile
+      args:
+        - NO_CACHE=${TIMESTAMP}
+    container_name: grpc-monitor
+    network_mode: "host"
+    ports:
+      - "50051:50051"
+    environment:
+      - GOMAXPROCS=1
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+    restart: unless-stopped
+
+  websocket-monitor:
+    build:
+      context: ../monitoracao-dados
+      dockerfile: api/websocket/Dockerfile
+    container_name: websocket-monitor
+    network_mode: "host"
+    ports:
+      - "8081:8081"
+    environment:
+      - GOMAXPROCS=1
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+    restart: unless-stopped

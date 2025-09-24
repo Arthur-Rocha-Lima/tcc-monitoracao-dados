@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+option go_package = "./;metrics";
+
+package metrics;
+
+service MetricService {
+  rpc GetMetrics(MetricsRequest) returns (MetricsResponse);
+}
+
+message MetricsRequest {}
+
+message MetricsResponse {
+  SystemMetrics system = 1;
+  MemoryMetrics memory = 2;
+  CPUMetrics cpu = 3;
+  DiskMetrics disk = 4;
+  NetworkMetrics network = 5;
+}
+
+message SystemMetrics {
+  string hostname = 1;
+  string platform = 2;
+  string architecture = 3;
+  string go_version = 4;
+  string uptime = 5;
+  string timestamp = 6;
+}
+
+message MemoryMetrics {
+  uint64 total_mb = 1;
+  uint64 used_mb = 2;
+  uint64 free_mb = 3;
+  double used_percent = 4;
+  string timestamp = 5;
+}
+
+message CPUMetrics {
+  int32 cores = 1;
+  double usage_percent = 2;
+  string timestamp = 3;
+}
+
+message DiskMetrics {
+  uint64 total_gb = 1;
+  uint64 used_gb = 2;
+  uint64 free_gb = 3;
+  double used_percent = 4;
+  string timestamp = 5;
+}
+
+message NetworkMetrics {
+  uint64 bytes_sent = 1;
+  uint64 bytes_recv = 2;
+  uint64 packets_sent = 3;
+  uint64 packets_recv = 4;
+  string timestamp = 5;
+}
